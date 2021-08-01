@@ -1,0 +1,12 @@
+# -*- mode: snippet -*-
+# name: defrule
+# uuid:
+# key: defru
+# condition: t
+# --
+(defrule ^RUL-${1:___} ${2:my-rule-name}
+  "${3:Helpful description of the rule}"$>
+  ${4:lhs}$>
+  =>$>
+  ${5:rhs})$>
+$0

@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: ->fact
+# uuid:
+# key: fact
+# condition: t
+# --
+(->fact :${1:foo}/${2:bar} {$3}$>)
+$0
+

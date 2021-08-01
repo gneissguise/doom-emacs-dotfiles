@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# name: defquery
+# uuid:
+# key: defq
+# condition: t
+# --
+(defquery ${1:my-query-name}
+  [$2]$>
+  [$3])$>
+$0
