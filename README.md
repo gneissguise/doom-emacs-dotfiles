@@ -39,12 +39,31 @@ config.el
 $ tree
 .
 ├── config.el
+├── config.org
+├── custom.el
 ├── init.el
 ├── LICENSE
 ├── packages.el
-└── README.md
+├── README.md
+├── snippets
+│   └── clojure
+│       ├── defquery
+│       ├── defrule
+│       └── fact
+└── splash
+    ├── doom-emacs-bw-dark.svg
+    ├── doom-emacs-bw-light.svg
+    ├── doom-emacs-color2.png
+    ├── doom-emacs-color2.svg
+    ├── doom-emacs-color.png
+    ├── doom-emacs-flugo-slant_out_bw.png
+    ├── doom-emacs-flugo-slant_out_bw-small.png
+    ├── doom-emacs-flugo-slant_out_purple.png
+    ├── doom-emacs-flugo-slant_out_purple-small.png
+    ├── logo_doom.png
+    └── README.org
 
-0 directories, 5 files
+3 directories, 21 files
 ```
 
 ## Prereqs
@@ -55,4 +74,7 @@ $ tree
 ## Installation
 ```sh
 $ wget https://raw.githubusercontent.com/gneissguise/doom-emacs-dotfiles/main/{config,init,packages}.el -P ~/.doom.d
+$ wget https://raw.githubusercontent.com/gneissguise/doom-emacs-dotfiles/main/snippets/clojure/{fact,defrule,defquery} -P ~/.doom.d/snippets/clojure
+$ wget https://raw.githubusercontent.com/gneissguise/doom-emacs-dotfiles/main/splash/logo_doom.png -P ~/.doom.d/splash
+$ doom sync
 ```
