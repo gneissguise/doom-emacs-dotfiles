@@ -42,7 +42,7 @@
 (custom-theme-set-faces! 'doom-vibrant
   '(line-number :foreground "#4db5bd")
   '(line-number-current-line :foreground "white" :background "#2a2e38"))
-(setq doom-theme 'doom-vivid)
+(setq doom-theme 'doom-vibrant)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -120,8 +120,8 @@
 (if (eq initial-window-system 'x)                 ; if started by emacs command or desktop file
     (toggle-frame-maximized)
   (toggle-frame-fullscreen))
-(add-to-list 'default-frame-alist '(height . 75))
-(add-to-list 'default-frame-alist '(width . 120))
+;; (add-to-list 'default-frame-alist '(height . 75))
+;; (add-to-list 'default-frame-alist '(width . 120))
 
 (add-hook 'prog-mode-hook #'goto-address-mode) ;; Linkify links!
 
@@ -261,9 +261,9 @@
   (setq lsp-headerline-breadcrumb-segments '(project file symbols))
   (setq lsp-headerline-breadcrumb-icons-enable t)
   (custom-set-faces!
-    '(lsp-headerline-breadcrumb-path-face :family "Helvetica Neue" :height 120)
-    '(lsp-headerline-breadcrumb-symbols-face :family "Helvetica Neue" :height 120 :slant italic)
-    '(lsp-headerline-breadcrumb-project-prefix-face :family "Helvetica Neue" :height 120)))
+    '(lsp-headerline-breadcrumb-path-face :family "Roboto Medium" :height 120)
+    '(lsp-headerline-breadcrumb-symbols-face :family "Roboto Medium" :height 120 :slant italic)
+    '(lsp-headerline-breadcrumb-project-prefix-face :family "Roboto Medium" :height 120)))
 
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'cider-repl-mode-hook #'company-mode)
@@ -311,8 +311,9 @@
                                       s)))))
   (browse-url (concat "http://localhost:13370/#?q=" (url-hexify-string search-term))))
 
-(dolist (keymap (list clojure-mode-map cider-repl-mode-map))
-  (define-key keymap (kbd "C-M-<backspace>") #'instant-cheatsheet-search))
+(after! cider
+  (dolist (keymap (list clojure-mode-map cider-repl-mode-map))
+    (define-key keymap (kbd "<f12> i") #'instant-cheatsheet-search)))
 
 
 ;; Portal config
