@@ -33,3 +33,21 @@
     (if (and beg end (> end beg))
         (narrow-to-region beg end)
       (message "Did not find both instances of the regex, %s %s, no narrow" beg end))))
+
+(map! :after symbol-overlay
+      :map symbol-overlay-mode-map
+      "M-s-p" #'symbol-overlay-jump-prev
+      "M-s-n" #'symbol-overlay-jump-next)
+
+(map! "s-[" #'previous-buffer
+      "s-]" #'next-buffer)
+(map! :map projectile-mode-map
+      "s-[" #'projectile-previous-project-buffer
+      "s-]" #'projectile-next-project-buffer)
+
+(after! text-mode
+  (add-hook! 'text-mode-hook
+             ;; Apply ANSI color codes
+             (with-silent-modifications
+               (ansi-color-apply-on-region (point-min) (point-max) t))))
+

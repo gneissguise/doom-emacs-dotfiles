@@ -19,3 +19,6 @@
     (while (or comp-files-queue
                (> (comp-async-runnings) 0))
       (sleep-for 1))
+
+;;(add-to-list 'doom-modules-load-path (expand-file-name "repos/contrib-modules/" doom-user-dir))
+

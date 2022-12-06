@@ -7,47 +7,47 @@
 
 
 ;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
-;(package! some-package)
+                                        ;(package! some-package)
 
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
 ;; https://github.com/radian-software/straight.el#the-recipe-format
-;(package! another-package
-;  :recipe (:host github :repo "username/repo"))
+                                        ;(package! another-package
+                                        ;  :recipe (:host github :repo "username/repo"))
 
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
 ;; file, or is located in a subdirectory of the repo, you'll need to specify
 ;; `:files' in the `:recipe':
-;(package! this-package
-;  :recipe (:host github :repo "username/repo"
-;           :files ("some-file.el" "src/lisp/*.el")))
+                                        ;(package! this-package
+                                        ;  :recipe (:host github :repo "username/repo"
+                                        ;           :files ("some-file.el" "src/lisp/*.el")))
 
 ;; If you'd like to disable a package included with Doom, you can do so here
 ;; with the `:disable' property:
-;(package! builtin-package :disable t)
+                                        ;(package! builtin-package :disable t)
 
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
 ;; from Doom or MELPA/ELPA/Emacsmirror:
-;(package! builtin-package :recipe (:nonrecursive t))
-;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+                                        ;(package! builtin-package :recipe (:nonrecursive t))
+                                        ;(package! builtin-package-2 :recipe (:repo "myfork/package"))
 
 ;; Specify a `:branch' to install a package from a particular branch or tag.
 ;; This is required for some packages whose default branch isn't 'master' (which
 ;; our package manager can't deal with; see radian-software/straight.el#279)
-;(package! builtin-package :recipe (:branch "develop"))
+                                        ;(package! builtin-package :recipe (:branch "develop"))
 
 ;; Use `:pin' to specify a particular commit to install.
-;(package! builtin-package :pin "1a2b3c4d5e")
+                                        ;(package! builtin-package :pin "1a2b3c4d5e")
 
 
 ;; Doom's packages are pinned to a specific commit and updated from release to
 ;; release. The `unpin!' macro allows you to unpin single packages...
-;(unpin! pinned-package)
+                                        ;(unpin! pinned-package)
 ;; ...or multiple packages
-;(unpin! pinned-package another-pinned-package)
+                                        ;(unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-(unpin! f)
+                                        ;(unpin! f)
 
 (package! org-roam-ui)
 (package! org-modern)
@@ -56,9 +56,7 @@
 (package! ts)
 (package! cl-lib)
 (package! svg-lib)
-;; (package! moom)
 (package! company-tabnine)
-;; (package! company-statistics)
 (package! goto-chg)
 (package! goto-last-point)
 (package! clojure-mode-extra-font-locking)
@@ -68,6 +66,7 @@
            :repo "babashka/neil"
            :files ("*.el")))
 (package! clomacs)
+;; (package! flycheck-joker)
 (package! magit-delta)
 
 ;; (package! emacsql-sqlite)
@@ -103,7 +102,7 @@
 ;; (package! consult-lsp)
 ;; (package! consult-yasnippet)
 ;; (package! embark-consult)
-(package! why-this)
+;; (package! why-this)
 (package! aggressive-indent)
 (package! symbol-overlay)
 (package! flycheck-status-emoji)
@@ -131,14 +130,7 @@
 ;; ;  :recipe (:host github :repo "emacs-tree-sitter/elisp-tree-sitter"))
 ;; ;(package! tree-sitter-query
 ;; ;  :recipe (:host github :repo "emacs-tree-sitter/elisp-tree-sitter"))
-(package! fireplace)
 (package! mixed-pitch)
-(package! poke-line)
-(package! corfu)
-(package! orderless)
-(package! kind-icon)
-(package! cape)
-(package! corfu-doc)
 (package! affe)
 (package! dumb-jump)
 (package! consult-jump-project
@@ -158,13 +150,15 @@
 (package! shanty-themes)
 (package! gitlab-pipeline)
 (package! git-link)
+(package! git-timemachine)
 (package! cider-eval-sexp-fu)
-;; (package! sayid)
 (package! tangonov-theme)
 (package! cljstyle-format)
 (package! buffer-flip)
-(package! diredfl)
-(package! all-the-icons-completion)
+;; (package! diredfl)
+;; (package! dired-subtree)
+;; (package! all-the-icons-completion)
+;; (package! all-the-icons-dired)
 
 (package! s)
 (package! dash)
@@ -175,3 +169,4 @@
 
 (package! transpose-frame)
 (package! color-theme-sanityinc-tomorrow)
+(package! ob-dsq)

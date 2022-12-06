@@ -61,22 +61,35 @@
 ;;    ("M-e" . dirvish-emerge-menu)
 ;;    ("M-j" . dirvish-fd-jump)))
 
-(use-package dired-x
-  :defer t
-  ;; Enable dired-omit-mode by default
-  ;; :hook
-  ;; (dired-mode . dired-omit-mode)
+(use-package! dired
   :config
-  ;; Make dired-omit-mode hide all "dotfiles"
-  (setq dired-omit-files
-        (concat dired-omit-files "\\|^\\..*$")))
+  ;;(setq dired-omit-files
+  ;;      (concat dired-omit-files "\\|^\\..*$"))
+  (setq dired-listing-switches "-lah"   ;ls style
+        ;; dired-listing-switches "--long --group-directories-first --classify --git --no-user --no-permissions --octal-permissions" ;exa style
+        dired-recursive-copies 'always
+        dired-recursive-deletes 'always)
+  (setq insert-directory-program "/usr/local/bin/exa")
+  (setq ls-lisp-use-insert-directory-program nil))
 
 ;; Addtional syntax highlighting for dired
 (use-package! diredfl
-  :defer t
-  :hook (dired-mode . diredfl-mode)
+  :after dired
+  :hook dired-mode
   :config
   (set-face-attribute 'diredfl-dir-name nil :bold t))
 
-;; Use `all-the-icons' as Dirvish's icon backend
-(use-package! all-the-icons :defer t)
+(use-package! dired-subtree
+  :general
+  (dired-mode-map
+   :states 'normal
+   "i" 'dired-subtree-toggle)
+  :config
+  (advice-add 'dired-subtree-toggle
+              :after (lambda () (interactive)
+                       (when all-the-icons-dired-mode
+                         (revert-buffer)))))
+
+;; (use-package! all-the-icons-dired
+;;   :after (dired all-the-icons)
+;;   :hook dired-mode)

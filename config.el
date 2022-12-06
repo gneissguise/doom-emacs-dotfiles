@@ -42,15 +42,15 @@
       kill-whole-line t
       display-line-numbers-type t
       so-long-threshold 100000
-      inhibit-splash-screen t
-      initial-scratch-message ";; - 'Tis but a scratch!\n;; - A scratch? Your arm's off!\n;; - No, it isn't!\n\n"
-      dired-recursive-copies 'always
-      dired-recursive-deletes 'always
+      use-dialog-box nil
+      inhibit-startup-screen t
+      initial-scratch-message ";; - 'Tis but a scratch!\n;;       A scratch? Your arm's off! - \n;; - No, it isn't!\n\n"
+      initial-major-mode 'lisp-interaction-mode
+      ;; initial-buffer-choice "*doom:scratch*"
       inhibit-compacting-font-caches t
       confirm-kill-emacs nil
       confirm-kill-processes nil
       delete-exited-processes t
-      scroll-margin 2
       sentence-end-double-space nil
       comp-async-report-warnings-errors nil
       flycheck-checker-error-threshold 4000
@@ -63,7 +63,8 @@
       scroll-preserve-screen-position 'always ;; Don't have `point' jump around
       frame-resize-pixelwise t
       find-file-visit-truename t
-      all-the-icons-scale-factor 1.1)
+      ;; all-the-icons-scale-factor 1.1
+      )
 
 (delete-selection-mode 1)
 (global-visual-line-mode t)
@@ -84,10 +85,7 @@
              mac-control-modifier 'control
              ns-use-proxy-icon  nil
              ns-use-thin-smoothing t
-             ns-confirm-quit nil
-             dired-listing-switches "--long --group-directories-first --classify --git --no-user --no-permissions --octal-permissions"
-             ;; insert-directory-program "/usr/local/bin/gls"
-             insert-directory-program "/usr/local/bin/exa")
+             ns-confirm-quit nil)
        (add-to-list 'default-frame-alist '(ns-transparent-titlebar . t))
        (add-to-list 'default-frame-alist '(ns-appearance . dark))
        (global-set-key (kbd "s-s") 'save-buffer)

@@ -5,10 +5,10 @@
   :config
   (setq projectile-project-search-path '("~/Repos/gateless")
         projectile-ignored-projects '("~/"
-                                      "~/.doom.d"
+                                      "~/.doom.d/"
                                       "~/.config/emacs"
                                       "~/.config/emacs/.local/straight/repos"
-                                      "~/.clojure")
+                                      "~/.clojure/")
         projectile-sort-order 'recently-active)
   (defun projectile-ignored-project-function (filepath)
     "Return t if FILEPATH is within any of `projectile-ignored-projects'"
@@ -41,12 +41,22 @@
 ;;         ))
 
 (use-package! diff-hl
-  :defer t
+  :hook
+  ((magit-pre-refresh . diff-hl-magit-pre-refresh)
+   (magit-post-refresh . diff-hl-magit-post-refresh))
   :config
+  (setq diff-hl-draw-borders nil)
   (global-diff-hl-mode))
 
-(add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
-(add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+(use-package! git-timemachine
+  ;; :hook (git-time-machine-mode . evil-normalize-keymaps)
+  :init (setq git-timemachine-show-minibuffer-details t)
+  :commands (git-timemachine)
+  :config
+  (define-key git-timemachine-mode-map (kbd "C-k") 'git-timemachine-show-previous-revision)
+  (define-key git-timemachine-mode-map (kbd "C-j") 'git-timemachine-show-next-revision)
+  (define-key git-timemachine-mode-map (kbd "C-k") 'git-timemachine-quit))
+
 
 (use-package! info-colors
   :defer t
@@ -103,8 +113,9 @@ is binary, activate `hexl-mode'."
 
 (use-package! lispy
   :defer t
+  :hook (tree-sitter-query-mode . lispy-mode)
   :bind (:map lispy-mode-map
-         ("M-w" . lispy-new-copy)))
+              ("M-w" . lispy-new-copy)))
 
 ;; To enable jsonian to work with flycheck
 (after! (jsonian flycheck) (jsonian-enable-flycheck))
@@ -114,8 +125,9 @@ is binary, activate `hexl-mode'."
 (use-package! aggressive-indent
   :defer t
   :hook
-  ((emacs-lisp-mode . aggressive-indent-mode)
-   (common-lisp-mode . aggressive-indent-mode))
+  ((emacs-lisp-mode  . aggressive-indent-mode)
+   (common-lisp-mode . aggressive-indent-mode)
+   (clojure-mode     . aggressive-indent-mode))
   :config
   (add-to-list
    'aggressive-indent-dont-indent-if
@@ -133,18 +145,6 @@ is binary, activate `hexl-mode'."
   (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
   (setq xref-show-definitions-function #'xref-show-definitions-completing-read))
 
-(add-hook 'clojure-mode-hook
-          #'(lambda ()
-              (setq-local comment-indent-function 'comment-indent-default)
-              (setq-local comment-add 0)
-              (comment-normalize-vars)))
-
-;; (add-hook 'cider-repl-mode-hook #'cider-company-enable-fuzzy-completion)
-;; (add-hook 'cider-mode-hook #'cider-company-enable-fuzzy-completion)
-(add-hook 'clojure-mode-hook #'aggressive-indent-mode)
-(add-hook 'clojurec-mode-hook #'aggressive-indent-mode)
-(add-hook 'clojurescript-mode-hook #'aggressive-indent-mode)
-
 (use-package! cider
   :defer t
   :config
@@ -157,8 +157,13 @@ is binary, activate `hexl-mode'."
         cider-repl-popup-stacktraces t
         cider-repl-wrap-history t
         cider-repl-display-in-current-window nil
+        cider-repl-display-help-banner nil
+        cider-auto-select-error-buffer t
         cider-overlays-use-font-lock t
+        cider-prompt-for-symbol nil
         cider-repl-history-size 10000
+        cider-repl-use-pretty-printing t
+        cider-history-file "~/.clojure/nrepl-history"
         cider-print-fn 'puget
         cider-print-quota 10485760
         cider-print-buffer-size 8192
@@ -168,7 +173,7 @@ is binary, activate `hexl-mode'."
         cider-auto-select-test-report-buffer nil
         cider-font-lock-dynamically '(macro core function var)
         cider-preferred-build-tool 'clojure-cli
-        cider-clojure-cli-aliases "dev:test:debug"
+        cider-clojure-cli-aliases "dev:test:debug:clj-kondo"
         cider-repl-pop-to-buffer-on-connect nil
         cider-eldoc-display-for-symbol-at-point nil
         ))
@@ -185,9 +190,9 @@ is binary, activate `hexl-mode'."
 ;;   :config
 ;;   (set-lookup-handlers! 'clj-refactor-mode nil))
 
-(add-hook! ('cider-repl-mode-hook 'cider-repl-history-mode-hook)
-  (setq-local +word-wrap-extra-indent 'single)
-  (+word-wrap-mode +1))
+(add-hook! '(cider-repl-mode-hook
+             cider-repl-history-mode-hook)
+           #'(lambda () (+word-wrap-mode +1)))
 
 (use-package! neil
   :defer t
@@ -202,7 +207,7 @@ is binary, activate `hexl-mode'."
 (after! lsp-mode
   (setq lsp-lens-enable t
         lsp-auto-guess-root t
-        lsp-semantic-tokens-enable t
+        lsp-semantic-tokens-enable nil  ;Disabled in favor of tree-sitter-hl
         lsp-headerline-breadcrumb-enable nil
         lsp-signature-auto-activate nil
         lsp-signature-render-documentation t
@@ -224,7 +229,7 @@ is binary, activate `hexl-mode'."
         lsp-ui-doc-max-height 20
         lsp-ui-doc-enhanced-markdown t
         lsp-ui-doc-text-scale-level 0.8
-        lsp-ui-doc-max-width 125
+        lsp-ui-doc-max-width 120
         lsp-ui-peek-fontify 'always
         )
   (custom-set-faces
@@ -235,23 +240,60 @@ is binary, activate `hexl-mode'."
    )
 
   (add-hook! 'lsp-ui-doc-mode-hook
-             #'(lambda ()
-                 (setq-local +word-wrap-extra-indent 'single)
-                 (+word-wrap-mode +1))))
+             #'(lambda () (+word-wrap-mode +1))))
 
-(use-package! why-this
-  :defer t
+;; (use-package! why-this
+;;   :defer t
+;;   :config
+;;   (setq why-this-annotate-heat-map-cold "#203448")
+;;   (setq why-this-annotate-heat-map-warm "#382f27")
+;;   :bind ("s-w" . why-this))
+
+;; (use-package! clojure-mode-extra-font-locking
+;;   :after clojure-mode
+;;   ;; :config
+;;   ;; adding fontlocking for clara rules
+;;   ;; (font-lock-add-keywords
+;;   ;;  'clojure-mode
+;;   ;;  '(("\\(=>\\|<-\\)"
+;;   ;;     . font-lock-variable-name-face)))
+;;   (put-clojure-indent 'match 'defun)
+;;   )
+
+(use-package! tree-sitter
+  ;; setting up for clojure defs ~/.tree-sitter/bin
+  :ensure t
   :config
-  (setq why-this-annotate-heat-map-cold "#203448")
-  (setq why-this-annotate-heat-map-warm "#382f27")
-  :bind ("s-w" . why-this))
+  (add-to-list 'tree-sitter-major-mode-language-alist
+               '(clojure-mode . clojure))
+  (tree-sitter-load 'clojure
+                    "clojure"
+                    "tree_sitter_clojure_def")
+  ;; (add-hook 'clojure-mode-hook #'tree-sitter-mode)
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-(use-package! clojure-mode-extra-font-locking
-  :after clojure-mode
-  ;; :config
-  ;; adding fontlocking for clara rules
-  ;; (font-lock-add-keywords
-  ;;  'clojure-mode
-  ;;  '(("\\(=>\\|<-\\)"
-  ;;     . font-lock-variable-name-face)))
-  )
+(use-package! tree-sitter-langs
+  :after tree-sitter)
+
+(after! projectile ;; Babashka - projectile bindings
+  (projectile-register-project-type
+   'babashka '("bb.edn")
+   :project-file "bb.edn"
+   :test "bb test"
+   :test-suffix "_test"))
+
+(setq flycheck-checker-error-threshold 128000)
+
+;; (use-package! flycheck-joker
+;;   :if (executable-find "joker")
+;;   :after flycheck)
+
+;; (defvar clojure-deps-hook nil
+;;   "Utility providing additional functionality to deps.edn project files.")
+
+;; (defun clojure-deps ()
+;;   "Fun things to do with clojure deps.edn files"
+;;   (interactive)
+;;   (run-hooks 'clojure-deps-hook)
+;;   (message "clojure-deps hook"))
